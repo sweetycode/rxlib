@@ -15,3 +15,12 @@ let uniqueIdCounter = 0
 export function useUniqueId(prefix: string): string {
     return useState(() => `${prefix}${++uniqueIdCounter}`)[0]
 }
+
+export function useToggle(initialValue: boolean): [boolean, () => void, (value: boolean) => void] {
+    const [value, setValue] = useState<boolean>(initialValue)
+    return [
+        value,
+        () => setValue(v => !v),
+        setValue,
+    ]
+}

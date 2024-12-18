@@ -7,13 +7,30 @@ type ClassArray = ClassValue[]
 
 
 export function cn(...classes: ClassValue[]): string {
-    return classes
-        .flat()
-        .filter(s => typeof s === 'string' && s.length > 0).join(' ')
+    return filterValidClassNames(classes).join(' ')
 }
 
 export function cx(...classes: ClassValue[]): string {
-    return twMerge(cn(classes))
+    return twMerge(cn(...classes))
+}
+
+/**
+ * Conditional merge class names
+ */
+export function ccx(...classes: ClassValue[]): string {
+    const cns = filterValidClassNames(classes)
+    if (cns.length > 1) {
+        return cx(cns)
+    } else {
+        return cn(cns)
+    }
+}
+
+
+function filterValidClassNames(classes: ClassValue[]): string[] {
+    return classes
+        .flat()
+        .filter(s => typeof s === 'string' && s.length > 0) as string[]
 }
 
 

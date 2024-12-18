@@ -10,7 +10,7 @@ const buttonVariants = cva(`px-4 py-2 text-sm font-medium rounded-md inline-flex
             secondary: ``,
             destructive: ``,
             outline: `border border-zinc-200 hover:bg-zinc-100 shadow-sm`,
-            ghost: ``,
+            ghost: `hover:bg-zinc-100`,
             link: `underline-offset-4 hover:underline`,
         },
         size: {
