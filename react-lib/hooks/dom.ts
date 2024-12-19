@@ -1,5 +1,6 @@
 import { useEffect } from "preact/hooks"
 
+
 /**
  * TODO: idemopotence
  */
@@ -11,4 +12,3 @@ export function useInsertStyle(style: string) {
         return () => el.remove()
     }, [style])
 }
-

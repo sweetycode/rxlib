@@ -11,23 +11,24 @@ import { useClickAwayWhen } from "react-lib/hooks/events";
 
 function Demo() {
     return <Navbar>
-        <NavbarBrand> {/* Optional */}
+        <Brand> {/* Optional */}
             {/** icon */}
             {/** text */}
-        </NavbarBrand>
-        <NavbarMenu> {/* Optional */}
-            <NavbarMenuLink href="/">Home</NavbarMenuLink>
+        </Brand>
+        <Menu> {/* Optional */}
+            <MenuLink href="/">Home</MenuLink>
             {/* more links */}
-        </NavbarMenu>
-        <NavbarAction> {/* Optional */}
-            <NavbarActionIcon>{/** icon */}</NavbarActionIcon>
-        </NavbarAction>
+        </Menu>
+        <Action> {/* Optional */}
+            <ActionIcon>{/** icon */}</ActionIcon>
+        </Action>
     </Navbar>
 }
 
 
 const theme = {
     height: `3.5em`,
+
     container: `h-14 block shadow-sm border-b border-zinc-200`,
     navbar: `h-full container mx-auto px-6 flex items-center gap-4`,
     brand: `flex items-center gap-2`,
@@ -44,18 +45,14 @@ interface NavbarContextType {
 const NavbarContext = createContext<NavbarContextType>({open: false, setOpen: ()=>{}})
 
 
-export function Navbar({className, containerClassName, children}: {className?: string, containerClassName?: string, children: VNode<unknown>[]}) {
+function Navbar({className, containerClassName, children}: {className?: string, containerClassName?: string, children: VNode<unknown>[]}) {
     const [open, setOpen] = useState(false)
-
-    const {NavbarBrand: brand, NavbarMenu: menu, NavbarAction: action} = useSlots(children, [children])
 
     return <nav className={ccx(theme.container, containerClassName)}>
         <div className={ccx(theme.navbar, className)}>
-            {menu && <ToggleButton toggle={() => setOpen(value => !value)}/>}
+            <ToggleButton toggle={() => setOpen(value => !value)}/>
             <NavbarContext.Provider value={{open, setOpen}}>
-                {brand}
-                {menu}
-                {action}
+                {children}
             </NavbarContext.Provider>
         </div>
     </nav>
@@ -67,14 +64,14 @@ function ToggleButton({toggle}: {toggle: () => void}) {
     </button>
 }
 
-export function NavbarBrand({className, children}: {className?: string, children?: ComponentChild}) {
+function Brand({className, children}: {className?: string, children?: ComponentChild}) {
     return <a href="/" className={ccx(theme.brand, className)}>
         {children}
     </a>
 }
 
 
-export function NavbarMenu({className, children}: {className?: string, children: ComponentChildren}) {
+function Menu({className, children}: {className?: string, children: ComponentChildren}) {
     const {open, setOpen} = useContext(NavbarContext)
     const ref = useRef<HTMLDivElement>(null)
     useClickAwayWhen(open, ref, () => setOpen(false))
@@ -83,21 +80,27 @@ export function NavbarMenu({className, children}: {className?: string, children:
     </div>
 }
 
-export function NavbarMenuLink({className, href, children}: {className?: string, href: string, children: ComponentChildren}) {
+function MenuLink({className, href, children}: {className?: string, href: string, children: ComponentChildren}) {
     return <a href={href} className={ccx(theme.menuLink, className)}>{children}</a>
 }
 
-export function NavbarAction({className, children}: {className?: string, children: ComponentChildren}) {
+function Action({className, children}: {className?: string, children: ComponentChildren}) {
     return <div className={ccx(theme.action, className)}>
         {children}
     </div>
 }
 
 
-export function NavbarActionIcon({children, className}: {children: ComponentChildren, className?: string}) {
+function ActionIcon({children, className}: {children: ComponentChildren, className?: string}) {
     return <Button variant="ghost" className={ccx('px-2.5 py-2.5 text-zinc-500', className)}>
         {children}
     </Button>
 }
 
-
+export default Object.assign(Navbar, {
+    Brand,
+    Menu,
+    MenuLink,
+    Action,
+    ActionIcon,
+})

@@ -10,12 +10,6 @@ export function useResOrError<T>(initialValue: T): [ResOrErr<T>, (res: T) => voi
     return [state, (res) => setState({res}), (err) => setState({err})]
 }
 
-
-let uniqueIdCounter = 0
-export function useUniqueId(prefix: string): string {
-    return useState(() => `${prefix}${++uniqueIdCounter}`)[0]
-}
-
 export function useToggle(initialValue: boolean): [boolean, () => void, (value: boolean) => void] {
     const [value, setValue] = useState<boolean>(initialValue)
     return [
@@ -23,4 +17,11 @@ export function useToggle(initialValue: boolean): [boolean, () => void, (value: 
         () => setValue(v => !v),
         setValue,
     ]
+}
+
+
+export function useObjectState<T extends {}>(initialValue: T): [T, (partial: Partial<T>) => void] {
+    const [state, setState] = useState<T>(initialValue)
+
+    return [state, (partial) => setState(s => ({...s, ...partial}))]
 }

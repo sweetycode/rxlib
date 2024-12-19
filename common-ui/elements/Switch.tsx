@@ -8,7 +8,7 @@ type SwitchProps = {
     onChackedChange?: (checked: boolean) => void
 } & ComponentProps<'button'>
 
-export function Switch({className, checked, onChackedChange, ...props}: SwitchProps) {
+export default function Switch({className, checked, onChackedChange, ...props}: SwitchProps) {
     const buttonClassName = checked? `bg-zinc-900`: `bg-zinc-200`
     const spanClassName = checked? `translate-x-4`: `translate-x-0`
     return <button role="switch" aria-checked={checked} onClick={onChackedChange == null ? undefined: () => onChackedChange(!checked)}
