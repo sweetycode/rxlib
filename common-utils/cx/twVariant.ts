@@ -88,7 +88,7 @@ declareVariantPrefix('rounded');
 
 // border
 declareVariantPattern(/^border(-\d)?$/);
-orthogonalize(['border-'], [...'xysetrbl'], ['-'])
+orthogonalize(['border-'], [...'xysetrbl'], ['', '-'])
     .forEach(prefix => declareVariantPrefix(prefix));
 
 declareVariantPattern(/^border-[a-z](-\d)?/);

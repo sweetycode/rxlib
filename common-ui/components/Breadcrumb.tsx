@@ -1,28 +1,22 @@
-import type { CcProps } from "common-ui/types"
-import { ccx } from "common-utils/cx"
-import type { ComponentChildren } from "preact"
+import { asComponent } from "common-ui/decl"
+import { wrapWith } from '../decl';
+import { ChevronRightIcon } from "common-icons/icons";
 
 const theme = {
-    breadcrumb: `flex items-center space-x-1 leading-none text-zinc-500`,
-    item: (link: boolean) => ``,
+    container: `flex flex-wrap items-center gap-1 text-sm text-zinc-500`,
+    label: ``,
+    seperator: ``,
+    link: ``,
 }
 
-function Breadcrumb({className, children}: CcProps) {
-    return <div className={ccx(theme.breadcrumb, className)}>
-        {children}
-    </div>
-}
-
-function Item({className, href, children}: CcProps & {href?: string}) {
-    const props = {
-        className: ccx(theme.item(href != null), className),
-        href,
-        children,
-    }
-    return href ? <a {...props}/>: <span {...props}/>
-}
+const Breadcrumb = asComponent('ul', theme.container)
+const Label = wrapWith('li', {}, asComponent('span', theme.label))
+const Link = wrapWith('li', {}, asComponent<{href: string}>('a', theme.link))
+const Seperator = () => <li><ChevronRightIcon size="20"/></li>
 
 
 export default Object.assign(Breadcrumb, {
-    Item,
+    Label,
+    Link,
+    Seperator,
 })

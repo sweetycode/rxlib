@@ -2,7 +2,7 @@ import { cloneElement, createContext, type ComponentChildren, type ComponentProp
 import { useContext, useState } from "preact/hooks";
 import { Portal } from "./Portal";
 import { ccx } from "common-utils/cx";
-import type { CcProps, ChProps } from "common-ui/types";
+import type { CnProps } from "common-ui/decl";
 
 interface DialogContextType {
     open: boolean
@@ -21,19 +21,19 @@ const theme = {
     footer: ``
 }
 
-function Dialog({children}: ChProps) {
+function Dialog({children}: {children: ComponentChildren}) {
     const [open, setOpen] = useState<boolean>(false)
     return <DialogContext.Provider value={{open, setOpen}}>
         {children}
     </DialogContext.Provider>
 }
 
-function Trigger({children}: ChProps<VNode>) {
+function Trigger({children}: {children: VNode<any>}) {
     const {setOpen} = useContext(DialogContext)
     return cloneElement(children, {onClick: () => setOpen(true)})
 }
 
-function Content({className, children}: CcProps) {
+function Content({className, children}: CnProps<{children?: ComponentChildren}>) {
     const {open, setOpen} = useContext(DialogContext)
     return open && <Portal>
         <Overlay onClick={() => setOpen(false)}/>

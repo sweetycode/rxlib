@@ -15,11 +15,11 @@ export function createFilterForDraft<E extends {data: {draft?: boolean}}>(
 
 
 
-export function createStaticPathsMapperForSlug<E extends {id: string, data: {slug?: string}}>({
+export function createStaticPathsMapperForSlug<E extends {id: string, data: {slug?: string}}, P>({
     propsGenerator
 }: {
-    propsGenerator: (entry: E) => Record<string, unknown>
-}):(entry: E) => {params: {slug: string}, props: Record<string, unknown>} {
+    propsGenerator: (entry: E) => P
+}):(entry: E) => {params: {slug: string}, props: P} {
     return entry => ({
         params: {slug: entry.data.slug ?? entry.id},
         props: propsGenerator(entry)
@@ -40,6 +40,22 @@ export function createMapperForDraftAnnotation<E extends {data: {draft?: boolean
     }
 }
 
+
+export function createMapperForExtractingCategoryFromSlug<E extends {id: string, data: {slug?: string, category?: string}}>(
+): (entry: E) => E {
+    return e => {
+        if (e.data.slug == null) {
+            e.data.slug = e.id
+        }
+        const match = e.data.slug.match(/^(\w+)\//)
+        if (match) {
+            e.data.category = match[1]
+            e.data.slug = e.data.slug.substring(match[0].length)
+        }
+        return e
+    }
+}
+
 export function createMapperForExtractingPubDateFromSlug<E extends {id: string, data: {slug?: string, pubDate?: Date}}>(
 ): (entry: E) => E {
     return e => {
@@ -49,7 +65,6 @@ export function createMapperForExtractingPubDateFromSlug<E extends {id: string, 
         const match = e.data.slug.match(/(\d{2})(\d{2})\/(\d{2})_/)
         if (match) {
             const [all, year, month, day] = match
-            console.log({match})
             e.data.pubDate = new Date(`20${year}-${month}-${day}`)
             e.data.slug = e.data.slug.substring(all.length)
         }
