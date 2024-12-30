@@ -1,19 +1,52 @@
-import { defineSC, type CcProps } from "common-ui/utils"
-import { ccx } from "common-utils/cx"
+import type { CnProps } from "common-ui/decl";
+import { ccx } from "common-utils/cx";
+import { createContext, type ComponentChildren, type ComponentProps } from "preact";
+import { useContext, useState, type Dispatch, type StateUpdater } from "preact/hooks";
 
 const theme = {
-    container: ``,
-    list: ``,
-    trigger: ``,
-    content: ``,
+    tabs: ``,
+    list: `bg-zinc-100 p-1 rounded-lg space-x-1`,
+    trigger: `px-8 py-1 text-sm font-medium text-zinc-500 rounded-md data-[state=active]:bg-white data-[state=active]:text-zinc-900 data-[state=active]:shadow`,
 }
 
-const Tabs = defineSC('div', theme.container)
-const List = defineSC('ul', theme.list)
-function Trigger({className, ...props}: CcProps) {
-    return <li><button className={ccx(theme.trigger, className)} {...props}/></li>
+
+interface TabsContextType {
+    value: string,
+    setValue: Dispatch<StateUpdater<string>>
 }
-const Content = defineSC('div', theme.content)
+
+const TabsContext = createContext<TabsContextType>({value: '', setValue: () => {}})
+
+
+function Tabs({className, children, defaultValue}: CnProps & {defaultValue?: string, children: ComponentChildren}) {
+    const [value, setValue] = useState<string>(defaultValue ?? '')
+    return <div className={ccx(theme.tabs, className)}>
+        <TabsContext.Provider value={{value, setValue}}>
+            {children}
+        </TabsContext.Provider>
+    </div>
+}
+
+
+function List({className, children}: CnProps & {children: ComponentChildren}) {
+    return <div className={ccx(theme.list, className)}>
+        {children}
+    </div>
+}
+
+function Trigger({className, value, ...props}: CnProps & {value?: string} & ComponentProps<'button'>) {
+    const {value: currentValue, setValue} = useContext(TabsContext)
+    const state = currentValue === value ? 'active': 'inactive'
+    return <button className={ccx(theme.trigger, className)} onClick={() => setValue(value??'')} {...props} {...{'data-state': state}}></button>
+}
+
+function Content({value, children}: {value: string, children?: ComponentChildren}) {
+    const {value: currentValue} = useContext(TabsContext)
+    if (value !== currentValue) {
+        return <></>
+    }
+    return children
+}
 
 
 export default Object.assign(Tabs, {
@@ -22,15 +55,3 @@ export default Object.assign(Tabs, {
     Content,
 })
 
-export function Demo() {
-    return <Tabs>
-        <List>
-            <Trigger>Tab1</Trigger>
-            <Trigger>Tab2</Trigger>
-            <Trigger>Tab3</Trigger>
-        </List>
-        <Content>
-            Content1
-        </Content>
-    </Tabs>
-}

@@ -1,5 +1,5 @@
+import { asComponent } from "common-ui/decl";
 import { type ComponentChildren } from "preact";
-import { defineSC } from "common-ui/utils";
 
 /**
  * https://www.shadcnblocks.com/block/feature15
@@ -20,16 +20,16 @@ const theme = {
 }
 
 
-const Feature = defineSC('div', theme.feature)
-const Hero = defineSC('div', theme.hero)
-const Title = defineSC('h2', theme.title)
-const SubTitle = defineSC('p', theme.subTitle)
-const Description = defineSC('p', theme.description)
-const CardList = defineSC('div', theme.cardList)
-const Card = defineSC('div', theme.card)
-const CardIcon = defineSC('div', theme.cardIcon)
-const CardTitle = defineSC('div', theme.cardTitle)
-const CardDescription = defineSC('div', theme.cardDescription)
+const Feature = asComponent('div', theme.feature)
+const Hero = asComponent('div', theme.hero)
+const Title = asComponent('h2', theme.title)
+const SubTitle = asComponent('p', theme.subTitle)
+const Description = asComponent('p', theme.description)
+const CardList = asComponent('div', theme.cardList)
+const Card = asComponent('div', theme.card)
+const CardIcon = asComponent('div', theme.cardIcon)
+const CardTitle = asComponent('div', theme.cardTitle)
+const CardDescription = asComponent('div', theme.cardDescription)
 
 
 export default Object.assign(Feature, {

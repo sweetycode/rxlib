@@ -36,16 +36,19 @@ export default Object.assign(PostList, {
     PubDate,
 })
 
+export interface DemoData {
+    posts: {
+        title: string,
+        category: string,
+        description: string,
+        pubDate: string,
+    }[]
+}
 
-export function Demo() {
-    const post = {
-        title: 'Getting Started with Modern Web Development: A Complete Guide', 
-        category: 'Web Development',
-        description: `Dive into the fundamentals of modern web development. Learn about essential tools, frameworks, and best practices that will help you build robust and scalable web applications in today's fast-paced development environment.`,
-        pubDate: `March 15, 2024`
-    }
+export function Demo({posts}: DemoData) {
+    
     return <PostList>
-        {[post, post, post].map(({title, category, description, pubDate}) => <Item>
+        {posts.map(({title, category, description, pubDate}) => <Item>
             <Heading>
                 <Category href="#">{category}</Category>
             </Heading>
