@@ -1,21 +1,36 @@
-import type { CcProps } from "common-ui/types"
+import { ccx } from "common-utils/cx"
+import { toChildArray, type ComponentChildren } from "preact"
 
-export function ResizableDemo() {
-    return <Resizable/>
+
+const theme = {
+    resizable: ``,
+    panel: ``,
+    handle: ``,
 }
+
 
 type Direction = 'horizontal'|'vertical'
-
-function Resizable({direction}: CcProps&{direction?: Direction}) {
-
+interface ResizableProps {
+    className?: string
+    children: ComponentChildren
+    direction?: Direction
 }
 
-function Panel() {
 
+function Resizable({direction, className, children}: ResizableProps) {
+    return <div className={ccx(theme.resizable, className)}>
+        {toChildArray(children).map((child, index) => {
+            return index == 0 ? child: <><Handle/>{child}</>
+        })}
+    </div>
 }
 
-function Handle() {
+function Panel({className, children}: {className?: string, children: ComponentChildren}) {
+    return <div className={ccx(theme.panel, className)}>{children}</div>
+}
 
+function Handle({className}: {className?: string}) {
+    return <div className={ccx(theme.handle, className)}></div>
 }
 
 export default Object.assign(Resizable, {

@@ -3,6 +3,8 @@ import { cloneElement, h, type ComponentChildren, type FunctionComponent, type R
 
 export type CnProps<P = {}> = {className?: string} & P
 
+export type CcProps<P = {}> = CnProps<{children?: ComponentChildren}> & P
+
 
 export function asComponent<P>(tag: string, className?: string): FunctionComponent<CnProps<P&{asChild?: boolean}>> {
     return ({asChild, children, ...props}: RenderableProps<CnProps<P&{asChild?: boolean}>>) => {
