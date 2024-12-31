@@ -15,14 +15,10 @@ export function createFilterForDraft<E extends {data: {draft?: boolean}}>(
 
 
 
-export function createStaticPathsMapperForSlug<E extends {id: string, data: {slug?: string}}, P>({
-    propsGenerator
-}: {
-    propsGenerator: (entry: E) => P
-}):(entry: E) => {params: {slug: string}, props: P} {
+export function createStaticPathsMapperForSlug<E extends {id: string, data: {slug?: string}}>():(entry: E) => {params: {slug: string}, props: {entry: E}} {
     return entry => ({
         params: {slug: entry.data.slug ?? entry.id},
-        props: propsGenerator(entry)
+        props: {entry},
     })
 }
 

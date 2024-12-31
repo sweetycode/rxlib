@@ -6,7 +6,7 @@ import Button from "common-ui/elements/Button"
 import { ccx } from 'common-utils/cx/index';
 import { useContext, useRef, useState, type Dispatch, type StateUpdater } from "preact/hooks";
 import { useClickAwayWhen } from "react-lib/hooks/events";
-import { asComponent } from "common-ui/decl";
+import { asComponent, type CcProps } from "common-ui/decl";
 
 
 const theme = {
@@ -27,7 +27,7 @@ interface NavbarContextType {
 const NavbarContext = createContext<NavbarContextType>({open: false, setOpen: ()=>{}})
 
 
-function Navbar({className, children}: {className?: string, containerClassName?: string, children: VNode<unknown>[]}) {
+function Navbar({className, children}: CcProps) {
     const [open, setOpen] = useState(false)
 
     return <nav className={ccx(theme.navbar, className)}>
@@ -44,7 +44,7 @@ function ToggleButton() {
     </button>
 }
 
-const Brand = asComponent('a', theme.brand)
+const Brand = asComponent<{href: string}>('a', theme.brand)
 const BrandIcon = asComponent('span', theme.brandIcon)
 const BrandText = asComponent('span', theme.brandText)
 

@@ -4,7 +4,7 @@ import type { ComponentChildren } from "preact";
 // see: https://www.shadcnblocks.com/preview/footer7/
 
 const theme = {
-    container: `container mx-auto text-zinc-500 text-sm`,
+    footer: `text-zinc-500 text-sm`,
     main: `flex justify-between space-x-40`,
     legal: `flex justify-between border-t border-zinc-200 mt-16 pt-10 font-medium`,
     hero: `flex-1 space-y-4`,
@@ -28,7 +28,7 @@ const theme = {
 }
 
 
-const Footer = asComponent('div', theme.container)
+const Footer = asComponent('div', theme.footer)
 const Main = asComponent('div', theme.main)
 const Hero = asComponent('div', theme.hero)
 const Heading = asComponent('div', theme.heading)
@@ -48,6 +48,25 @@ const LegalLinkList = asComponent('ul', theme.legalLinkList)
 const LegalLinkItem = wrapWith('li', {}, asComponent<{href: string}>('a', theme.legalLinkItem))
 
 
+export default Object.assign(Footer, {
+    Main,
+    Hero,
+    Heading,
+    Logo,
+    Title,
+    Description,
+    IconLinks,
+    IconLink,
+    Nav,
+    NavLinks,
+    NavLinksName,
+    NavLinkList,
+    NavLinkItem,
+    Legal,
+    LegalDeclare,
+    LegalLinkList,
+    LegalLinkItem,
+})
 
 
 export interface DemoData {
