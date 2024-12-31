@@ -41,6 +41,17 @@ const AdditionTitle = asComponent('div', theme.additionTitle)
 const AdditionIconList = asComponent('div', theme.additionIconList)
 const AdditionIconLink = asComponent<{href?: string}>('a', theme.additionIconLink)
 
+
+export default Object.assign(Hero, {
+    Background,
+    Logo,
+    Title,
+    SubTitle,
+    Description,
+    Actions,
+    PrimaryButton,
+})
+
 export interface DemoData {
     logo: ComponentChildren,
     title: string,

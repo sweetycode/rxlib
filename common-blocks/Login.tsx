@@ -31,7 +31,7 @@ const Hero = asComponent('div', theme.hero)
 const Logo = asComponent('div', theme.logo)
 const Title = asComponent('div', theme.title)
 const SubTitle = asComponent('div', theme.subTitle)
-const Form = asComponent('div', theme.form)
+const Form = asComponent<ComponentProps<'form'>>('form', theme.form)
 const Input = asComponent<ComponentProps<'input'>>('input', theme.input)
 const OptionsContent = asComponent('div', theme.optionsContent)
 const OptionRememberMe = ({className, children, ...props}: CnProps&ComponentProps<'input'>) => {
@@ -55,6 +55,7 @@ export default Object.assign(Login, {
     Form,
     Input,
     OptionsContent,
+    OptionRememberMe,
     OptionForgotPasswordLink,
     PrimaryButton,
     SecondaryButton,

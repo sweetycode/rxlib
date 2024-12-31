@@ -13,10 +13,12 @@ const theme = {
     navbar: `h-full flex items-center gap-4`,
     brand: `flex items-center gap-2`,
     brandIcon: ``,
-    brandText: ``,
+    brandText: `font-semibold text-xl`,
     menu: (on: boolean) => `gap-1 flex items-center order-2 md:order-1 md:flex-1 max-md:absolute max-md:top-14 max-md:flex-col max-md:bg-white max-md:left-0 max-md:w-full max-md:p-1 max-md:border-b max-md:border-zinc-200 max-md:shadow-sm ${on? 'max-md:flex': 'max-md:hidden'}`,
     menuItem: `text-zinc-500 data-[active=true]:text-zinc-900 hover:bg-zinc-100 font-medium text-sm py-2 px-3 rounded-lg max-md:w-full max-md:text-center`,
     right: `flex items-center order-1 md:order-2 ml-auto`,
+    actionIcon: `px-2.5 py-2.5 text-zinc-500`,
+    actionButton: ``,
 }
 
 interface NavbarContextType {
@@ -63,9 +65,13 @@ const Right = asComponent('div', theme.right)
 
 
 function ActionIcon({children, className}: {children: ComponentChildren, className?: string}) {
-    return <Button variant="ghost" className={ccx('px-2.5 py-2.5 text-zinc-500', className)}>
+    return <Button variant="ghost" className={ccx(theme.actionIcon, className)}>
         {children}
     </Button>
+}
+
+function ActionButton({className, ...props}: CcProps & {asChild?: boolean}) {
+    return <Button variant="ghost" className={ccx(theme.actionButton, className)} {...props}/>
 }
 
 export default Object.assign(Navbar, {
@@ -77,6 +83,7 @@ export default Object.assign(Navbar, {
     MenuItem,
     Right,
     ActionIcon,
+    ActionButton,
 })
 
 
@@ -90,7 +97,7 @@ export interface DemoData {
 function Demo(data: DemoData) {
     return <Navbar>
         <ToggleButton/>
-        <Brand>
+        <Brand href="/">
             <BrandIcon asChild>{data.brandIcon}</BrandIcon>
             <BrandText>{data.brandText}</BrandText>
         </Brand>

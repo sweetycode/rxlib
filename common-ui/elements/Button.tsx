@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { cx } from "common-utils/cx";
+import { ccx, cx } from "common-utils/cx";
 import { cloneElement, toChildArray, type ComponentProps, type VNode } from "preact";
 import { forwardRef } from "preact/compat";
 
@@ -31,8 +31,8 @@ const Button = forwardRef(({className, variant, size, asChild, children, ...prop
         if (children == null || toChildArray(children).length != 1 ) {
             throw Error('The children of `asChild` must be a single vnode.')
         }
-        const vnode = toChildArray(children)[0] as VNode
-        return cloneElement(vnode, {...vnode.props, ...mergedProps})
+        const vnode = toChildArray(children)[0] as VNode<{className?: string}>
+        return cloneElement(vnode, {...vnode.props, ...mergedProps, className: ccx(vnode.props.className, mergedProps.className)})
     } else {
         return <button {...mergedProps} ref={ref as any}>{children}</button>
     }
