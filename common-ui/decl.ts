@@ -1,16 +1,21 @@
 import { ccx } from 'common-utils/cx';
-import { cloneElement, h, type ComponentChildren, type FunctionComponent, type RenderableProps, type VNode, toChildArray } from 'preact';
+import { h, type ComponentChildren, type FunctionComponent, type RenderableProps, type VNode, toChildArray, type ComponentProps, type Ref } from 'preact';
+import { forwardRef, type PropsWithoutRef } from 'preact/compat';
 
 export type CnProps<P = {}> = {className?: string} & P
 
 export type CcProps<P = {}> = CnProps<{children?: ComponentChildren}> & P
 
 
-export function asComponent<P>(tag: string, className?: string): FunctionComponent<CnProps<P&{asChild?: boolean}>> {
-    return ({asChild, children, ...props}: RenderableProps<CnProps<P&{asChild?: boolean}>>) => {
-        return asChild ? cloneElement(getOnlyChild(children), prependClassName(props, className))
-            : h(tag, prependClassName(props, className), children)
-    }
+export function asComponent<P extends {} = {}>(type: string, style?: string, defaultProps: Partial<P> = {}): FunctionComponent<PropsWithoutRef<P & CnProps> & {ref?: Ref<unknown>}> {
+    return forwardRef(({className, ...props}: P & CnProps, ref) => {
+        return h(type, {
+            ...defaultProps,
+            ...props,
+            ref,
+            className: ccx(style, className as string),
+        })
+    })
 }
 
 export function wrapWith<W extends {}, P = {}>(tag: string, wrapProps: W, fn: FunctionComponent<P>): FunctionComponent<P> {

@@ -1,14 +1,13 @@
-import { useEffect } from "preact/hooks"
+import type { RefObject } from "preact"
+import { useEffect, useRef } from "preact/hooks"
 
 
-/**
- * TODO: idemopotence
- */
-export function useInsertStyle(style: string) {
+export function useSetFocus<T extends HTMLElement>(): RefObject<T>{
+    const ref = useRef<T>(null)
     useEffect(() => {
-        const el = document.createElement('style')
-        el.innerHTML = style
-        document.head.appendChild(el)
-        return () => el.remove()
-    }, [style])
+        if (ref.current != null) {
+            ref.current.focus()
+        }
+    }, [])
+    return ref
 }

@@ -38,7 +38,7 @@ class MemoryStorage implements Storage {
 const safeSessionStorage = isOnClient() ? sessionStorage: new MemoryStorage()
 const safeLocalStorage = isOnClient()?localStorage: new MemoryStorage()
 
-function useStorageState<T>(storage: Storage, key: string, initialValue: T): [T, (newValue: T) => void, () => void] {
+function useStorageState<T>(storage: Storage, key: string, initialValue: T|(()=>T)): [T, (newValue: T) => void, () => void] {
     const [state, setState] = useState<T>(initialValue)
 
     useEffect(() => {
@@ -55,7 +55,7 @@ function useStorageState<T>(storage: Storage, key: string, initialValue: T): [T,
 }
 
 
-export function useSessionStorage<T>(key: string, initialValue: T) {
+export function useSessionStorage<T>(key: string, initialValue: T|(()=>T)) {
     return useStorageState(safeSessionStorage, key, initialValue)
 }
 

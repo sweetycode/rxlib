@@ -1,6 +1,6 @@
 
 
-import { createContext, type ComponentChildren, type VNode } from "preact"
+import { createContext, type ComponentChildren } from "preact"
 import { MenuIcon } from "common-icons/icons"
 import Button from "common-ui/elements/Button"
 import { ccx } from 'common-utils/cx/index';
@@ -10,8 +10,9 @@ import { asComponent, type CcProps } from "common-ui/decl";
 
 
 const theme = {
+    container: ``,
     navbar: `h-full flex items-center gap-4`,
-    brand: `flex items-center gap-2`,
+    brand: `flex items-center gap-1`,
     brandIcon: ``,
     brandText: `font-semibold text-xl`,
     menu: (on: boolean) => `gap-1 flex items-center order-2 md:order-1 md:flex-1 max-md:absolute max-md:top-14 max-md:flex-col max-md:bg-white max-md:left-0 max-md:w-full max-md:p-1 max-md:border-b max-md:border-zinc-200 max-md:shadow-sm ${on? 'max-md:flex': 'max-md:hidden'}`,
@@ -28,6 +29,7 @@ interface NavbarContextType {
 
 const NavbarContext = createContext<NavbarContextType>({open: false, setOpen: ()=>{}})
 
+const Container = asComponent('div', theme.container)
 
 function Navbar({className, children}: CcProps) {
     const [open, setOpen] = useState(false)
@@ -46,7 +48,7 @@ function ToggleButton() {
     </button>
 }
 
-const Brand = asComponent<{href: string}>('a', theme.brand)
+const Brand = asComponent<{href: string}>('a', theme.brand, {href: '/'})
 const BrandIcon = asComponent('span', theme.brandIcon)
 const BrandText = asComponent('span', theme.brandText)
 
@@ -75,6 +77,7 @@ function ActionButton({className, ...props}: CcProps & {asChild?: boolean}) {
 }
 
 export default Object.assign(Navbar, {
+    Container,
     ToggleButton,
     Brand,
     BrandIcon,
@@ -95,17 +98,20 @@ export interface DemoData {
 }
 
 function Demo(data: DemoData) {
-    return <Navbar>
-        <ToggleButton/>
-        <Brand href="/">
-            <BrandIcon asChild>{data.brandIcon}</BrandIcon>
-            <BrandText>{data.brandText}</BrandText>
-        </Brand>
-        <Menu>
-            {data.menuItems.map(item => <MenuItem href="#">{item}</MenuItem>)}
-        </Menu>
-        <Right>
-            <ActionIcon>{data.actionIcon}</ActionIcon>
-        </Right>
-    </Navbar>
+    return 
+    <Container>
+        <Navbar>
+            <ToggleButton/>
+            <Brand href="/">
+                <BrandIcon asChild>{data.brandIcon}</BrandIcon>
+                <BrandText>{data.brandText}</BrandText>
+            </Brand>
+            <Menu>
+                {data.menuItems.map(item => <MenuItem href="#">{item}</MenuItem>)}
+            </Menu>
+            <Right>
+                <ActionIcon>{data.actionIcon}</ActionIcon>
+            </Right>
+        </Navbar>
+    </Container>
 }

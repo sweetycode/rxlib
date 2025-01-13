@@ -1,7 +1,7 @@
 const installedScripts = new Map<string, Promise<any>>()
 const installedStyles = new Set<string>()
 
-export async function installScript<T=void>(script: string, inline = false, initialize: () => Promise<T>): Promise<T> {
+export async function installScript<T=void>(script: string, inline = false, initialize?: () => Promise<T>): Promise<T> {
     const cachedVal = installedScripts.get(script)
     if (cachedVal != null) {
         return cachedVal
