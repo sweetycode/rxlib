@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "preact/hooks"
 import { installMonacoEditor } from "./install"
 import { ccx } from '../../common-utils/cx/index';
 import { debounce } from "common-utils/utils/helpers";
-import { useToggleOnce } from "react-lib/hooks/states";
-import Skeleton from "common-ui/elements/Skeleton";
+import { useDebouncedCallback, useIsClient, useToggleOnce } from "react-lib/hooks/states";
 import { useMount } from "react-lib/hooks/lifecycle";
 import { delayPromise } from '../../common-utils/utils/helpers';
+import { RandomTextSkeleton } from "common-ui/elements/Skeleton";
 
 
 interface MonacoEditorProps {
@@ -45,6 +45,7 @@ export function MonacoEditor({className, value = '', placeholder, language, opti
     const editorRef = useRef<any>(null)
     const [isReady, setReady] = useToggleOnce()
     const stateRef = useRef<{value: string, language?: string}>({value: value, language: language})
+    const debouncedOnChange = useDebouncedCallback(onChange, 250)
 
     useEffect(() => {
         delayPromise(installMonacoEditor()).then(monaco => {
@@ -56,9 +57,7 @@ export function MonacoEditor({className, value = '', placeholder, language, opti
                 ...options,
             })
             if (onChange) {
-                editor.getModel().onDidChangeContent(debounce(() => {
-                    onChange(stateRef.current.value = editor.getModel().getValue())
-                }, 200))
+                editor.getModel().onDidChangeContent(debouncedOnChange)
             }
             setReady()
         })
@@ -89,22 +88,7 @@ export function MonacoEditor({className, value = '', placeholder, language, opti
 
     // todo: add more update effects
     return <div ref={containerRef} className={ccx('min-h-20', className)}>
-        {!isReady && <LoadingIndicator/>}
-    </div>
-}
-
-const CONDIDATE_SIZES = ['w-1/5', 'w-2/5', 'w-3/5', 'w-1/4', 'w-1/2', 'w-1/3']
-
-function LoadingIndicator({className}: {className?: string}) {
-    const [sizes] = useState(() => {
-        const n = Math.floor(3 + Math.random() * 4)
-        return [...Array(n)].map(() => {
-            const i = Math.floor(Math.random() * CONDIDATE_SIZES.length);
-            return CONDIDATE_SIZES[i]
-        })
-    })
-    return <div className={ccx(`space-y-1 flex flex-col`, className)}>
-        {sizes.map(size => <Skeleton className={`${size} h-4 rounded-sm`}/>)}
+        {!isReady && <RandomTextSkeleton/>}
     </div>
 }
 

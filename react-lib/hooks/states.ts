@@ -1,8 +1,62 @@
-import { useState } from "preact/hooks"
+import { useCallback, useEffect, useMemo, useRef, useState } from "preact/hooks"
+import { useMount, useUnMount } from "./lifecycle"
+import { debounce } from "common-utils/utils/helpers"
 
-export interface ResOrErr<T> {
-    res?: T
-    err?: Error
+
+export function useIsClient(): boolean {
+    const [isClient, setClient] = useState(false)
+    useMount(() => setClient(true))
+    return isClient
+}
+
+
+export function useDebouncedCallback<T extends (...args: any) => ReturnType<T>>(func: T|undefined, wait: number): T|undefined {
+    const funcRef = useRef(func)
+    
+    useEffect(() => {
+        funcRef.current = func
+    }, [func])
+
+    return useMemo(() => {
+        return debounce((...args: any) => funcRef.current && funcRef.current(args), wait)
+    }, []) as T
+}
+
+export function useDebouncedWatch<T>(input: T, wait: number): [T] {
+    const [value, setValue] = useState(input)
+    const stateRef = useRef<{timeout: number, lastInput: T}>({timeout: 0, lastInput: input})
+
+    const clearTimeout = () => window.clearTimeout(stateRef.current.timeout)
+    useUnMount(clearTimeout)
+    
+    useEffect(() => {
+        if (input == stateRef.current.lastInput) {
+            return
+        }
+        clearTimeout()
+        stateRef.current.timeout = window.setTimeout(() => {
+            setValue(stateRef.current.lastInput = input)
+        }, wait)
+    }, [input])
+    return [value]
+}
+
+
+// https://github.com/mantinedev/mantine/blob/master/packages/%40mantine/hooks/src/use-debounced-state/use-debounced-state.ts
+export function useDebouncedState<T>(defaultValue: T, wait: number): [T, (value: T) => void]  {
+    const [value, setValue] = useState(defaultValue)
+    const stateRef = useRef<{timeout: number}>({timeout: 0})
+
+    const clearTimeout = () => window.clearTimeout(stateRef.current.timeout)
+    useUnMount(clearTimeout)
+
+    const debounced = useCallback((newValue: T) => {
+        stateRef.current.timeout = window.setTimeout(() => {
+            setValue(newValue)
+        }, wait)
+    }, [])
+
+    return [value, debounced]
 }
 
 export function useBiState<T1, T2>(a: T1): [[a: T1|null, (a: T1) => void], [b: T2|null,  (b: T2) => void]] {

@@ -1,5 +1,5 @@
 import type { RefObject } from "preact"
-import { useEffect, useRef } from "preact/hooks"
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 
 export function useSetFocus<T extends HTMLElement>(): RefObject<T>{
@@ -10,4 +10,14 @@ export function useSetFocus<T extends HTMLElement>(): RefObject<T>{
         }
     }, [])
     return ref
+}
+
+export function useFullscreen(): {ref: any, toggle: () => void, fullscreen: boolean} {
+    const ref = useRef()
+    const [fullscreen, setFullscreen] = useState(false)
+    const toggle = useCallback(() => {
+        
+    }, [])
+
+    return {ref, toggle, fullscreen}
 }
