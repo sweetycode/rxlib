@@ -55,10 +55,10 @@ function useStorageState<T>(storage: Storage, key: string, initialValue: T|(()=>
 }
 
 
-export function useSessionStorage<T>(key: string, initialValue: T|(()=>T)) {
+export function useSessionState<T>(key: string, initialValue: T|(()=>T)) {
     return useStorageState(safeSessionStorage, key, initialValue)
 }
 
-export function useLocalStorage<T>(key: string, initialValue: T) {
+export function useLocalState<T>(key: string, initialValue: T) {
     return useStorageState(safeLocalStorage, key, initialValue)
 }

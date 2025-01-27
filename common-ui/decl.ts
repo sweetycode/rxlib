@@ -7,7 +7,7 @@ export type CnProps<P = {}> = {className?: string} & P
 export type CcProps<P = {}> = CnProps<{children?: ComponentChildren}> & P
 
 
-export function asComponent<P extends {} = {}>(type: string, style?: string, defaultProps: Partial<P> = {}): FunctionComponent<PropsWithoutRef<P & CnProps> & {ref?: Ref<unknown>}> {
+export function asComponent<P extends {} = {}>(type: string, style?: string, defaultProps: Partial<P> = {}): FunctionComponent<PropsWithoutRef<P & CnProps> & {ref?: Ref<any>}> {
     return forwardRef(({className, ...props}: P & CnProps, ref) => {
         return h(type, {
             ...defaultProps,

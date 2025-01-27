@@ -1,12 +1,10 @@
-import { useEffect, useRef, useState } from "preact/hooks"
+import { useEffect, useRef } from "preact/hooks"
 import { installMonacoEditor } from "./install"
 import { ccx } from '../../common-utils/cx/index';
 import { debounce } from "common-utils/utils/helpers";
-import { useDebouncedCallback, useIsClient, useToggleOnce } from "react-lib/hooks/states";
+import { useDebouncedCallback, useToggleOnce } from "react-lib/hooks/states";
 import { useMount } from "react-lib/hooks/lifecycle";
-import { delayPromise } from '../../common-utils/utils/helpers';
 import { RandomTextSkeleton } from "common-ui/elements/Skeleton";
-
 
 interface MonacoEditorProps {
     className?: string
@@ -45,10 +43,13 @@ export function MonacoEditor({className, value = '', placeholder, language, opti
     const editorRef = useRef<any>(null)
     const [isReady, setReady] = useToggleOnce()
     const stateRef = useRef<{value: string, language?: string}>({value: value, language: language})
-    const debouncedOnChange = useDebouncedCallback(onChange, 250)
+    const debouncedOnChange = useDebouncedCallback(() => {
+        onChange && editorRef.current && onChange(stateRef.current.value = editorRef.current.getModel().getValue())
+    }, 250)!
 
     useEffect(() => {
-        delayPromise(installMonacoEditor()).then(monaco => {
+        installMonacoEditor().then(monaco => {
+            if (containerRef.current == null) { return }
             const editor = editorRef.current = monaco.editor.create(containerRef.current, {
                 value: stateRef.current.value,
                 language: stateRef.current.language,
@@ -166,8 +167,8 @@ export function MonacoDiffEditor({className, left='', right='', onLeftChange, on
 
     return <div ref={containerRef} className={className}>
         {!isReady && <div className="flex gap-2">
-            <LoadingIndicator className="grow"/>
-            <LoadingIndicator className="grow"/>
+            <RandomTextSkeleton className="grow"/>
+            <RandomTextSkeleton className="grow"/>
         </div>}
     </div>
 }
