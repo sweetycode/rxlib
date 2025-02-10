@@ -1,6 +1,6 @@
 import { useEffect, useState } from "preact/hooks"
 import { isOnClient } from "../utils"
-import { fastParse, fastStringify } from "common-utils/encoding/fastenc"
+import { stringify, unstringify } from "common-utils/encoding/stringify"
 
 function castUndefineToNull<T>(v: T): NonNullable<T>|null  {
     return v == null ? null: v
@@ -44,12 +44,12 @@ function useStorageState<T>(storage: Storage, key: string, initialValue: T|(()=>
     useEffect(() => {
         const value = storage.getItem(key)
         if (value != null) {
-            setState(fastParse(value) as T)
+            setState(unstringify(value) as T)
         }
     }, [])
 
     return [state, (value: T) => {
-        storage.setItem(key, fastStringify(value))
+        storage.setItem(key, stringify(value as any))
         setState(value)
     }, () => storage.removeItem(key)]
 }
